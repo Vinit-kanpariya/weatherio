@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { getWeather } from "../../../lib/getWeather";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { WiHumidity, WiSunrise, WiSunset } from "react-icons/wi";
-import { FaWind } from "react-icons/fa";
+import { WiBarometer, WiHumidity, WiSunrise, WiSunset } from "react-icons/wi";
 import { IoHome } from "react-icons/io5";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import { BsEmojiSunglasses } from "react-icons/bs";
@@ -117,29 +116,43 @@ export default function ForecastDetail() {
         height={100}
       />
       <p className="text-2xl">{weather.main.temp}°C</p>
-      <p className="text-xl capitalize">{weather.weather?.[0]?.description || "No data"}</p>
+      <p className="text-xl capitalize mb-3">{weather.weather?.[0]?.description || "No data"}</p>
 
-      <div className="mt-4 text-md text-center bg-grey bg-opacity-20 p-3 rounded-lg flex flex-col gap-4 justify-center">
-        <p className="flex items-center">
-          <WiHumidity className="inline-block mr-2" />Humidity: {weather.main.humidity}%
-        </p>
-        <p className="flex items-center">
-          <FaWind className="inline-block mr-2" />Wind: {weather.wind.speed} m/s
-        </p>
-        <p className="flex items-center">
-          <BsEmojiSunglasses className="inline-block mr-2" />Feels like: {weather.main.feels_like}°C
-        </p>
-        <p className="flex items-center">
-          <GiWindTurbine className="inline-block mr-2" />Pressure: {weather.main.pressure} hPa
-        </p>
-        <p className="flex items-center">
-          <WiSunrise className="inline-block mr-2" />
-          Sunrise: {new Date(weather.sys.sunrise * 1000).toLocaleTimeString()}
-        </p>
-        <p className="flex items-center">
-          <WiSunset className="inline-block mr-2" />
-          Sunset: {weather.sys.sunset ? new Date(weather.sys.sunset * 1000).toLocaleTimeString() : "N/A"}
-        </p>
+      <div className="lg:mt-6 lg:justify-evenly md:justify-evenly sm:justify-center grid grid-cols-2 gap-4 w-full mt-4 sm:flex sm:flex-wrap w-full">
+        <div className="flex flex-col items-center">
+          <WiHumidity className="inline-block mr-1 w-7 h-7"/>
+          <p>Humidity</p>
+          <p className="font-semibold">{weather.main.humidity}%</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <WiBarometer className="inline-block mr-1 w-7 h-7"/>
+          <p>Pressure</p>
+          <p className="font-semibold">{weather.main.pressure} hPa</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <BsEmojiSunglasses className="inline-block mr-1 w-6 h-6 mb-1"/>
+          <p>Feels like</p>
+          <p className="font-semibold">{weather.main.feels_like}°C</p>  
+        </div>
+        <div className="flex flex-col items-center ">
+          <GiWindTurbine className="inline-block w-7 h-7"/>
+          <p>Wind</p>
+          <p className="font-semibold">{weather.wind.speed} m/s</p>
+        </div>
+        <div className="flex flex-col items-center ">
+          <WiSunrise className=" inline-block w-7 h-7"/>
+          <p>Sunrise</p>
+          <p className="font-semibold">
+          {weather.sys.sunset ? new Date(weather.sys.sunrise * 1000).toLocaleTimeString() : "N/A"}
+          </p>
+        </div>
+        <div className="flex flex-col items-center">
+         <WiSunset className=" inline-block w-7 h-7"/>
+         <p>Sunset</p>
+          <p className="font-semibold">
+          {weather.sys.sunset ? new Date(weather.sys.sunset * 1000).toLocaleTimeString() : "N/A"}
+          </p>
+        </div>
       </div>
     </div>
   );
