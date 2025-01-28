@@ -110,7 +110,7 @@ export default function Home() {
           />
           <button
             onClick={fetchWeather}
-            className={`w-full sm:w-auto xs:text-xl px-5 py-2 rounded-md ${
+            className={`w-full sm:w-auto xs:text-xl ml-2 px-5 py-2 rounded-md ${
               darkMode
                 ? "bg-amber-300 hover:bg-amber-200 text-black"
                 : "bg-black hover:bg-blue-700 text-white"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getWeather } from "../../../lib/getWeather";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
@@ -38,6 +38,7 @@ interface DailyWeather {
 
 export default function ForecastDetail() {
   const params = useParams();
+  const router = useRouter();
   const dayIndex = parseInt(Array.isArray(params?.day) ? params.day[0] : params?.day || "0");
   const [weather, setWeather] = useState<DailyWeather | null>(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -55,7 +56,6 @@ export default function ForecastDetail() {
   }, []);
 
   useEffect(() => {
-    localStorage.getItem("theme: dark");
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
@@ -85,22 +85,35 @@ export default function ForecastDetail() {
         darkMode ? "bg-gray-900 text-white" : "bg-yellow-100 text-black"
       }`}
     >
-      {/* Dark Mode Toggle */}
-      <Link href="/" className="absolute top-5 left-4 text-2xl font-bold">
-        <TiWeatherPartlySunny className="inline-block mb-1" /> Weatherio
-      </Link>
-      <button
-        className={`absolute top-4 right-4 p-2 rounded-full ${
-          darkMode ? "bg-yellow-400" : "bg-stone-800"
-        } transition-all duration-200`}
-        onClick={() => setDarkMode(!darkMode)}
-      >
-        {darkMode ? (
-          <SunIcon className="w-6 h-6 text-stone-900 hover:text-stone-50" />
-        ) : (
-          <MoonIcon className="w-6 h-6 text-stone-200 hover:text-stone-50" />
-        )}
-      </button>
+      {/* Header with Back Button & Dark Mode Toggle */}
+      <div className="absolute top-4 flex items-center gap-4 w-full px-4">
+        {/* Back Button */}
+        <button
+          onClick={() => router.push("/")}
+          className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all duration-200"
+        >
+          ⬅ Back
+        </button>
+
+        {/* Weather App Title */}
+        <Link href="/" className="text-2xl font-bold flex-grow text-center">
+          <TiWeatherPartlySunny className="inline-block mb-1" /> Weatherio
+        </Link>
+
+        {/* Dark Mode Toggle */}
+        <button
+          className={`p-2 rounded-full ${
+            darkMode ? "bg-yellow-400" : "bg-stone-800"
+          } transition-all duration-200`}
+          onClick={() => setDarkMode(!darkMode)}
+        >
+          {darkMode ? (
+            <SunIcon className="w-6 h-6 text-stone-900 hover:text-stone-50" />
+          ) : (
+            <MoonIcon className="w-6 h-6 text-stone-200 hover:text-stone-50" />
+          )}
+        </button>
+      </div>
 
       {/* Weather Details */}
       <h1 className="text-3xl font-bold mt-12">
