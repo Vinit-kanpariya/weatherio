@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 import { getWeather } from "../lib/getWeather";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import { TiWeatherPartlySunny } from "react-icons/ti";
-import { FaTemperatureHigh, FaWind } from "react-icons/fa";
-import { WiSunrise, WiSunset, WiHumidity, WiCelsius } from "react-icons/wi";
+import Link from "next/link";
 import Image from "next/image";
 
-interface weatherData {
-  name: string;
+interface DailyWeather {
+  dt: number;
   main: {
     temp: number;
-    feels_like: number;
     humidity: number;
+    pressure: number;
+    feels_like: number;
   };
   weather: {
     main: string;
@@ -26,133 +26,128 @@ interface weatherData {
   sys: {
     sunrise: number;
     sunset: number;
-    country: string;
   };
+}
+
+interface WeatherData {
+  city: string;
+  daily: DailyWeather[];
 }
 
 export default function Home() {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState<weatherData>();
+  const [weather, setWeather] = useState<WeatherData | undefined>(undefined);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Fetch weather when city changes
-  const fetchWeather = async () => {
-    if (!city) return;
-    setLoading(true);
-    setError("");
-    setWeather(undefined);
-    try {
-      const data = await getWeather(city);
-      setWeather(data);
-    } catch {
-      setError("City not found !");
-    }
-    setLoading(false);
-  };
-
-  let backgroundClass = "";
-  if (weather) {
-    if (weather.weather[0].main === "Clear") {
-      backgroundClass = "bg-blue-500";
-    } else if (weather.weather[0].main === "Rain") {
-      backgroundClass = "bg-blue-800"; 
-    } else {
-      backgroundClass = "bg-gray-500";
-    }
-  }
-
-  //Dark mode
+  // Load dark mode preference
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) {
-      setDarkMode(storedTheme === "dark");
-    }
+    if (storedTheme) setDarkMode(storedTheme === "dark");
   }, []);
 
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
+  const fetchWeather = async () => {
+    if (!city) return;
+    setLoading(true);
+    setError("");
+    setWeather(undefined);
+
+    try {
+      const data = await getWeather(city);
+      setWeather(data);
+      localStorage.setItem("lastCity", city);
+    } catch {
+      setError("City not found!");
+    }
+    setLoading(false);
+  };
+
   return (
     <main
-      className={`flex flex-col items-center justify-center min-h-screen transition-all duration-500 ease-in-out ${backgroundClass} ${
+      className={`flex flex-col items-center justify-center min-h-screen transition-all duration-500 ease-in-out px-4 sm:px-8 lg:px-16 ${
         darkMode ? "bg-gray-900 text-white" : "bg-yellow-100 text-black"
       }`}
     >
-    
+      {/* Dark Mode Toggle */}
       <button
-      {
-        ...darkMode
-          ? { className: "absolute top-4 right-4 p-2 rounded-full bg-yellow-400 bg-opacity-70 transition-all duration-2000 z-10" }
-          : { className: "absolute top-4 right-4 p-2 rounded-full bg-stone-800 bg-opacity-70  transition-all duration-2000 z-10" } 
-      }
+        className={`absolute top-4 right-4 p-2 rounded-full transition-all duration-500 ${
+          darkMode ? "bg-yellow-400 text-black" : "bg-gray-800 text-white"
+        }`}
         onClick={() => setDarkMode(!darkMode)}
       >
-        {darkMode ? (
-          <SunIcon className="w-6 h-6 text-stone-900 hover:text-stone-50 transition-smooth duration-200" />
-        ) : (
-          <MoonIcon className="w-6 h-6 text-stone-200 hover:text-stone-50" />
-        )}
+        {darkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
       </button>
 
-      <div className="flex flex-col items-center justify-center ml-3 mr-3 md:px-3.5 md:py-3.5 lg:px-8 lg:py-12 xl:px-12 xl:py-12 p-4 rounded-md">
-        <h1 className="text-3xl font-bold mb-4 md:text-4xl"><TiWeatherPartlySunny className="inline-block" /> Weather App</h1>
+      {/* App Title */}
+      <Link
+        href="/"
+        className="text-2xl sm:text-3xl md:text-3xl font-bold absolute top-4 left-4 flex items-center gap-1"
+      >
+        <TiWeatherPartlySunny className="inline-block w-8 h-8" /> Weatherio
+      </Link>
 
-        <div className="flex gap-3 mt-3 flex-col sm:flex-row sm:gap-4 sm:justify-center">
+      {/* Conditional Margin - Only Applies if Weather Data Exists */}
+      <div
+        className={`w-full max-w-md sm:max-w-lg lg:max-w-xl ${
+          weather ? "mt-24 sm:mt-16" : "mt-0"
+        } flex flex-col items-center space-y-4`}
+      >
+        <p className="text-2xl font-semibold">5 - Day Forecast</p>
+
+        {/* Search Box */}
+        <div className="flex flex-wrap items-center justify-center w-full gap-3">
           <input
             type="text"
             placeholder="Enter city name"
-            className="w-full sm:w-72 md:w-80 lg:w-96 px-4 py-2 rounded-md text-black border-none focus:outline-none focus:ring-1 focus:ring-stone-800 hover:scale-105 transition-all duration-1000 ease-in-out"
+            className="w-full sm:w-3/4 px-4 py-2 rounded-md text-black border-none focus:outline-none focus:ring-1 focus:ring-stone-800 hover:scale-105 transition-all duration-500"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
           <button
             onClick={fetchWeather}
-            className={`${
+            className={`w-full sm:w-auto xs:text-xl px-5 py-2 rounded-md ${
               darkMode
                 ? "bg-amber-300 hover:bg-amber-200 text-black"
                 : "bg-black hover:bg-blue-700 text-white"
-            } px-5 py-2 rounded-md mt-3 sm:mt-0 transition-all transform hover:scale-110 duration-1000`}
+            } hover:scale-105 transition-all duration-500`}
           >
             Search
           </button>
         </div>
-
-        {loading && (
-          <div className="mt-5 flex justify-center">
-            <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
-
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-
-        {weather && !loading && (
-          <div className="flex flex-col items-center mt-6">
-            <h2 className="text-3xl font-semibold">
-              {weather.name}, {weather.sys.country}
-            </h2>
-            <p className="text-xl">{weather.main.temp}<WiCelsius className="inline-block size-10"/></p>
-            <p className="capitalize">{weather.weather[0].description}</p>
-
-            <Image
-              src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-              alt={weather.weather[0].description}
-              width={100}
-              height={100}
-            />
-
-            <div className="mt-4 text-sm bg-grey bg-opacity-20 p-3 rounded-lg flex flex-wrap gap-4 justify-center">
-              <p className="flex items-center hover:scale-110 transition-ease-in-out duration-900"><FaTemperatureHigh className="inline-block size-5 pr-1" /> {weather.main.feels_like}°C</p>
-              <p className="flex items-center hover:scale-110 transition-ease-in-out duration-900"><FaWind className="inline-block size-5 pr-1" /> {weather.wind.speed} m/s</p>
-              <p className="flex items-center hover:scale-110 transition-ease-in-out duration-900"><WiHumidity className="inline-block size-8 pr-1" /> {weather.main.humidity}%</p>
-              <p className="flex items-center hover:scale-110 transition-ease-in-out duration-900"><WiSunrise className="inline-block size-8 pr-1" /> {new Date(weather.sys.sunrise * 1000).toLocaleTimeString()}</p>
-              <p className="flex items-center hover:scale-110 transition-ease-in-out duration-900"><WiSunset className="inline-block size-8 pr-1" /> {new Date(weather.sys.sunset * 1000).toLocaleTimeString()}</p>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Loading and Error Messages */}
+      {loading && <p className="mt-4 text-lg">Loading...</p>}
+      {error && <p className="text-red-500 mt-4 text-lg">{error}</p>}
+
+      {/* Weather Forecast Cards */}
+      {weather && weather.daily.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8 w-full max-w-6xl">
+          {weather.daily.map((day: DailyWeather, index: number) => (
+            <Link key={index} href={`/forecast/${index}`} passHref>
+              <div className="p-4 bg-white bg-opacity-20 rounded-md flex flex-col items-center transition-all duration-300 hover:scale-105 cursor-pointer shadow-md">
+                <p className="font-semibold text-lg">
+                  {new Date(day.dt * 1000).toLocaleDateString()}
+                </p>
+                <Image
+                  src={`http://openweathermap.org/img/wn/${day.weather?.[0]?.icon}@2x.png`}
+                  alt={day.weather?.[0]?.description || "Weather icon"}
+                  width={70}
+                  height={70}
+                  className="mt-2"
+                />
+                <p className="text-xl font-semibold">{day.main.temp}°C</p>
+                <p className="text-sm">{day.weather?.[0]?.description || "No data"}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
