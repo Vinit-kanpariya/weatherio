@@ -104,8 +104,8 @@ export default function Home() {
               placeholder="Enter city name"
               className={`w-full sm:w-3/4 px-4 py-2 rounded-md border-2 focus:outline-none transition-all duration-300 
                 ${darkMode 
-                  ? "bg-white border-gray-600 text-black placeholder-gray-400 focus:ring-2 focus:ring-yellow-400" 
-                  : "bg-white border-gray-300 text-black placeholder-gray-600 focus:ring-2 focus:ring-blue-600"
+                  ? "bg-white border-gray-600 text-black placeholder-gray-400 focus:ring-1 focus:ring-yellow-400" 
+                  : "bg-white border-gray-300 text-black placeholder-gray-600 focus:ring-1 focus:ring-black"
                 }`}
               value={city}
               onChange={(e) => {
