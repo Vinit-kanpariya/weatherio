@@ -102,10 +102,10 @@ export default function Home() {
               ref={inputRef}
               type="text"
               placeholder="Enter city name"
-              className={`w-full sm:w-3/4 px-4 py-2 rounded-md border-2 focus:outline-none transition-all duration-300 
+              className={`w-full sm:w-3/4 px-4 py-2 rounded-md border-2 focus:outline-none transition-all hover:scale-105 duration-500 
                 ${darkMode 
                   ? "bg-white border-gray-600 text-black placeholder-gray-400 focus:ring-1 focus:ring-yellow-400" 
-                  : "bg-white border-gray-300 text-black placeholder-gray-600 focus:ring-1 focus:ring-black"
+                  : "bg-white border-gray-300 text-black placeholder-gray-600 focus:ring-1 focus:ring-black "
                 }`}
               value={city}
               onChange={(e) => {
@@ -118,7 +118,7 @@ export default function Home() {
             />
             <button
               onClick={handleSearch}
-              className={`w-full sm:w-auto px-5 py-2 rounded-md font-semibold transition-all duration-300 
+              className={`w-full sm:w-auto px-5 py-2 rounded-md font-semibold transition-all hover:scale-105 duration-500 md:ml-2 lg:ml-2
                 ${darkMode 
                   ? "bg-yellow-400 text-black hover:bg-yellow-300" 
                   : "bg-black text-white hover:bg-blue-500"
