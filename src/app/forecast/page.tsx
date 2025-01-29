@@ -101,7 +101,7 @@ export default function Forecast() {
         href="/"
         className="text-2xl sm:text-3xl md:text-3xl font-bold absolute top-4 left-4 flex items-center gap-1"
       >
-        <TiWeatherPartlySunny className="inline-block w-8 h-8" /> Weatherio
+        <TiWeatherPartlySunny className={`${darkMode ? "text-yellow-400" : "text-black"}`} /> Weatherio
       </Link>
 
       {/* Updated container width */}

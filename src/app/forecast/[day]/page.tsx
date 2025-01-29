@@ -85,8 +85,8 @@ export default function ForecastDetail() {
       }`}
     >
       {/* Dark Mode Toggle */}
-      <Link href="/" className="absolute top-5 left-4 text-2xl font-bold">
-        <TiWeatherPartlySunny className="inline-block mb-1" /> Weatherio
+      <Link href="/" className="absolute top-5 left-3 text-2xl font-bold">
+        <TiWeatherPartlySunny className={`${darkMode ? "text-yellow-400" : "text-black"} inline-block mb-2`} /> Weatherio
       </Link>
       <Link href="/" className={`absolute top-4 right-14 text-2xl font-bold ${darkMode ? "text-yellow-400" : "text-black"}`}><IoHome className="inline-block mr-3"/></Link>
       <button
