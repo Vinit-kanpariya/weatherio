@@ -1,3 +1,5 @@
+import next from "next";
+
 const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 const BASE_URL_FORECAST = "https://api.openweathermap.org/data/2.5/forecast";
 const BASE_URL_CURRENT = "https://api.openweathermap.org/data/2.5/weather";
@@ -54,13 +56,13 @@ interface DailyWeather {
 
 export async function getWeather(city: string): Promise<{ city: string; daily: DailyWeather[] }> {
   // Fetch current weather data to get sunrise and sunset
-  const currentResponse = await fetch(`${BASE_URL_CURRENT}?q=${city}&appid=${API_KEY}&units=metric`,{cache: 'force-cache'});
+  const currentResponse = await fetch(`${BASE_URL_CURRENT}?q=${city}&appid=${API_KEY}&units=metric`,{cache: 'force-cache', next: {revalidate : 3600}});
   if (!currentResponse.ok) throw new Error("Current weather data not found");
 
   const currentData: CurrentWeatherResponse = await currentResponse.json();
 
   // Fetch forecast data
-  const response = await fetch(`${BASE_URL_FORECAST}?q=${city}&appid=${API_KEY}&units=metric`, {cache: 'force-cache'});
+  const response = await fetch(`${BASE_URL_FORECAST}?q=${city}&appid=${API_KEY}&units=metric`, {cache: 'force-cache', next: {revalidate : 3600}});
   if (!response.ok) throw new Error("Weather forecast data not found");
 
   const data: ForecastResponse = await response.json();
