@@ -200,3 +200,5 @@ export default function Forecast() {
     </main>
   );
 }
+
+export const revalidate = 3600;

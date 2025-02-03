@@ -91,3 +91,4 @@ export async function getWeather(city: string): Promise<{ city: string; daily: D
 }
 
 export default getWeather;
+export const revalidate = 3600;
