@@ -60,7 +60,7 @@ export async function getWeather(city: string): Promise<{ city: string; daily: D
   const currentData: CurrentWeatherResponse = await currentResponse.json();
 
   // Fetch forecast data
-  const response = await fetch(`${BASE_URL_FORECAST}?q=${city}&appid=${API_KEY}&units=metric`);
+  const response = await fetch(`${BASE_URL_FORECAST}?q=${city}&appid=${API_KEY}&units=metric`, {cache: 'force-cache'});
   if (!response.ok) throw new Error("Weather forecast data not found");
 
   const data: ForecastResponse = await response.json();
