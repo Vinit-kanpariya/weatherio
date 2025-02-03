@@ -1,4 +1,3 @@
-import next from "next";
 
 const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 const BASE_URL_FORECAST = "https://api.openweathermap.org/data/2.5/forecast";
