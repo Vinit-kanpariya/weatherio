@@ -54,7 +54,7 @@ interface DailyWeather {
 
 export async function getWeather(city: string): Promise<{ city: string; daily: DailyWeather[] }> {
   // Fetch current weather data to get sunrise and sunset
-  const currentResponse = await fetch(`${BASE_URL_CURRENT}?q=${city}&appid=${API_KEY}&units=metric`);
+  const currentResponse = await fetch(`${BASE_URL_CURRENT}?q=${city}&appid=${API_KEY}&units=metric`,{cache: 'force-cache'});
   if (!currentResponse.ok) throw new Error("Current weather data not found");
 
   const currentData: CurrentWeatherResponse = await currentResponse.json();

@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getWeather } from "../../../lib/getWeather";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import Loading from "../../loading";
 import Image from "next/image";
 import { WiBarometer, WiHumidity, WiSunrise, WiSunset } from "react-icons/wi";
 import { IoHome } from "react-icons/io5";
@@ -76,7 +77,7 @@ export default function ForecastDetail() {
     fetchWeather();
   }, [dayIndex]);
 
-  if (!weather) return <p className="text-center mt-6">Loading...</p>;
+  if (!weather) return <Loading/>;
 
   return (
     <div
